@@ -12,7 +12,9 @@ import util from "./utils";
 import apiv1 from "./api/routes";
 
 const config = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../src/server", "config.json")).toString()
+  fs
+    .readFileSync(path.join(__dirname, "../src/server", "config.json"))
+    .toString()
 );
 log.setLevel(config.loglevel, false);
 log.debug("config: ", config);
@@ -38,9 +40,9 @@ app.use("/api", apiv1);
 app.use("/test", (req, res, next) => {
   res.json({ message: "success" });
 });
-app.use("/", express.static(path.join(process.cwd(), "build")));
+app.use("/", express.static(path.join(process.cwd(), "public")));
 app.use((req, res, next) => {
-  res.sendFile(path.join(process.cwd(), "build", "index.html"));
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 // 404 handler
 app.use((req, res, next) => {
@@ -53,13 +55,11 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res
-    .status(err.status || 500)
-    .json({
-      err,
-      status: "error",
-      req: { path: req.path, method: req.method },
-    });
+  res.status(err.status || 500).json({
+    err,
+    status: "error",
+    req: { path: req.path, method: req.method },
+  });
 });
 
 //error handler: app.use((err, req,res, next) => {// is an error handler because it takes four parameters})
