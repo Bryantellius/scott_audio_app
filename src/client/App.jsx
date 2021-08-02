@@ -1,30 +1,24 @@
-import React from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import "./assets/App.scss";
 
-const App = () => {
-  const [products, setProducts] = React.useState([]);
+import React, { Component } from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import routes from "./lib/routes";
 
-  React.useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((products) => setProducts(products));
-  }, []);
-
-  return (
-    <main className="container">
-      <div>
-        <h1>Products</h1>
-        <ul className="list-group-flush">
-          {products.map((p) => {
+export default class App extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <Switch>
+          {routes.map((route) => {
             return (
-              <li key={p.ProductID} className="list-group-item">
-                {p.Name}
-              </li>
+              <Route key={route.path} exact path={route.path}>
+                <route.func />
+              </Route>
             );
           })}
-        </ul>
-      </div>
-    </main>
-  );
-};
-
-export default App;
+        </Switch>
+      </BrowserRouter>
+    );
+  }
+}
